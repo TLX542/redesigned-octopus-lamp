@@ -116,8 +116,8 @@ task set_disp_from_seconds;
 endtask
 
 always @(*) begin
-    start_minutes = (set_d3 * 4'd10) + set_d2;
-    start_seconds = (set_d1 * 4'd10) + set_d0;
+    start_minutes = (set_d3 * 7'd10) + set_d2;
+    start_seconds = (set_d1 * 7'd10) + set_d0;
     start_total = (start_minutes * 7'd60) + start_seconds;
 end
 
