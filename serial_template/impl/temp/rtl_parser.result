@@ -1,0 +1,20 @@
+[
+ {
+  "InstFile" : "/home/abozkurt/etc/gowin/serial_template/src/serial_template.v",
+  "InstLine" : 1,
+  "InstName" : "serial_template",
+  "ModuleFile" : "/home/abozkurt/etc/gowin/serial_template/src/serial_template.v",
+  "ModuleLine" : 1,
+  "ModuleName" : "serial_template",
+  "SubInsts" : [
+   {
+    "InstFile" : "/home/abozkurt/etc/gowin/serial_template/src/serial_template.v",
+    "InstLine" : 43,
+    "InstName" : "uart_rx_inst",
+    "ModuleFile" : "/home/abozkurt/etc/gowin/serial_template/src/uart_rx.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "uart_rx"
+   }
+  ]
+ }
+]

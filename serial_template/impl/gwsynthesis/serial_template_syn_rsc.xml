@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="serial_template" Register="18" Alu="15" Lut="16" T_Register="58(18)" T_Alu="18(15)" T_Lut="76(16)">
+ <SubModule name="uart_rx_inst" Register="40" Alu="3" Lut="60" T_Register="40(40)" T_Alu="3(3)" T_Lut="60(60)"/>
+</Module>
