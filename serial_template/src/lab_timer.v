@@ -12,6 +12,7 @@ module lab_timer (
 
 parameter CLK_FRE  = 27;     // MHz
 parameter UART_FRE = 115200; // bps
+localparam [24:0] ONE_SEC_TICKS = (CLK_FRE * 1000000) - 1;
 
 wire [7:0] rx_data;
 wire       rx_data_valid;
@@ -58,9 +59,7 @@ reg btn0_prev;
 reg [6:0] start_minutes;
 reg [6:0] start_seconds;
 reg [13:0] start_total;
-
-reg [6:0] run_minutes;
-reg [5:0] run_seconds;
+reg [15:0] next_bcd;
 
 reg [3:0] disp_d3;
 reg [3:0] disp_d2;
@@ -91,25 +90,24 @@ function [6:0] hex2seven;
     end
 endfunction
 
-always @(*) begin
-    start_minutes = (set_d3 * 7'd10) + set_d2;
-    start_seconds = (set_d1 * 7'd10) + set_d0;
-    start_total = (start_minutes * 7'd60) + start_seconds;
-
-    if (running) begin
-        run_minutes = total_seconds / 14'd60;
-        run_seconds = total_seconds % 14'd60;
-
-        disp_d3 = run_minutes / 7'd10;
-        disp_d2 = run_minutes % 7'd10;
-        disp_d1 = run_seconds / 6'd10;
-        disp_d0 = run_seconds % 6'd10;
-    end else begin
-        disp_d3 = set_d3;
-        disp_d2 = set_d2;
-        disp_d1 = set_d1;
-        disp_d0 = set_d0;
+function [15:0] sec_to_bcd;
+    input [13:0] secs_total;
+    reg [6:0] mins;
+    reg [5:0] secs;
+    begin
+        mins = secs_total / 14'd60;
+        secs = secs_total % 14'd60;
+        sec_to_bcd[15:12] = mins / 7'd10;
+        sec_to_bcd[11:8]  = mins % 7'd10;
+        sec_to_bcd[7:4]   = secs / 6'd10;
+        sec_to_bcd[3:0]   = secs % 6'd10;
     end
+endfunction
+
+always @(*) begin
+    start_minutes = ({3'd0, set_d3, 1'b0} + {3'd0, set_d3, 3'b000}) + {3'd0, set_d2}; // d3*10+d2
+    start_seconds = ({3'd0, set_d1, 1'b0} + {3'd0, set_d1, 3'b000}) + {3'd0, set_d0}; // d1*10+d0
+    start_total = (start_minutes << 6) - (start_minutes << 2) + start_seconds; // m*60+s
 end
 
 always @(posedge sys_clk or negedge sys_rst_n) begin
@@ -135,6 +133,10 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
         set_d2 <= 4'd0;
         set_d1 <= 4'd0;
         set_d0 <= 4'd0;
+        disp_d3 <= 4'd0;
+        disp_d2 <= 4'd0;
+        disp_d1 <= 4'd0;
+        disp_d0 <= 4'd0;
 
         running <= 1'b0;
         sec_counter <= 25'd0;
@@ -154,6 +156,11 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
                 set_d2 <= set_d1;
                 set_d1 <= set_d0;
                 set_d0 <= rx_data[3:0];
+
+                disp_d3 <= set_d2;
+                disp_d2 <= set_d1;
+                disp_d1 <= set_d0;
+                disp_d0 <= rx_data[3:0];
             end
         end
 
@@ -163,13 +170,22 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
             sec_counter <= 25'd0;
             total_seconds <= start_total;
         end else if (running) begin
-            if (sec_counter == (CLK_FRE * 1000000 - 1)) begin
+            if (sec_counter == ONE_SEC_TICKS) begin
                 sec_counter <= 25'd0;
-                if (total_seconds > 14'd0) begin
+                if (total_seconds > 14'd1) begin
                     total_seconds <= total_seconds - 14'd1;
-                    if (total_seconds == 14'd1) begin
-                        running <= 1'b0;
-                    end
+                    next_bcd = sec_to_bcd(total_seconds - 14'd1);
+                    disp_d3 <= next_bcd[15:12];
+                    disp_d2 <= next_bcd[11:8];
+                    disp_d1 <= next_bcd[7:4];
+                    disp_d0 <= next_bcd[3:0];
+                end else if (total_seconds == 14'd1) begin
+                    total_seconds <= 14'd0;
+                    running <= 1'b0;
+                    disp_d3 <= 4'd0;
+                    disp_d2 <= 4'd0;
+                    disp_d1 <= 4'd0;
+                    disp_d0 <= 4'd0;
                 end else begin
                     running <= 1'b0;
                 end
