@@ -60,6 +60,7 @@ reg [6:0] start_minutes;
 reg [6:0] start_seconds;
 reg [13:0] start_total;
 reg [15:0] next_bcd;
+reg [13:0] next_total_seconds;
 
 reg [3:0] disp_d3;
 reg [3:0] disp_d2;
@@ -105,9 +106,9 @@ function [15:0] sec_to_bcd;
 endfunction
 
 always @(*) begin
-    start_minutes = ({3'd0, set_d3, 1'b0} + {3'd0, set_d3, 3'b000}) + {3'd0, set_d2}; // d3*10+d2
-    start_seconds = ({3'd0, set_d1, 1'b0} + {3'd0, set_d1, 3'b000}) + {3'd0, set_d0}; // d1*10+d0
-    start_total = (start_minutes << 6) - (start_minutes << 2) + start_seconds; // m*60+s
+    start_minutes = (set_d3 * 4'd10) + set_d2;
+    start_seconds = (set_d1 * 4'd10) + set_d0;
+    start_total = (start_minutes * 7'd60) + start_seconds;
 end
 
 always @(posedge sys_clk or negedge sys_rst_n) begin
@@ -170,11 +171,14 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
             sec_counter <= 25'd0;
             total_seconds <= start_total;
         end else if (running) begin
-            if (sec_counter == ONE_SEC_TICKS) begin
+            if (total_seconds == 14'd0) begin
+                running <= 1'b0;
+            end else if (sec_counter == ONE_SEC_TICKS) begin
                 sec_counter <= 25'd0;
                 if (total_seconds > 14'd1) begin
-                    total_seconds <= total_seconds - 14'd1;
-                    next_bcd = sec_to_bcd(total_seconds - 14'd1);
+                    next_total_seconds = total_seconds - 14'd1;
+                    total_seconds <= next_total_seconds;
+                    next_bcd = sec_to_bcd(next_total_seconds);
                     disp_d3 <= next_bcd[15:12];
                     disp_d2 <= next_bcd[11:8];
                     disp_d1 <= next_bcd[7:4];
@@ -186,8 +190,6 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
                     disp_d2 <= 4'd0;
                     disp_d1 <= 4'd0;
                     disp_d0 <= 4'd0;
-                end else begin
-                    running <= 1'b0;
                 end
             end else begin
                 sec_counter <= sec_counter + 25'd1;
