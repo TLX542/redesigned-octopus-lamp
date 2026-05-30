@@ -17,7 +17,6 @@ localparam [24:0] ONE_SEC_TICKS = (CLK_FRE * 1000000) - 1;
 wire [7:0] rx_data;
 wire       rx_data_valid;
 wire       rx_data_ready;
-wire [15:0] decremented_bcd;
 
 assign rx_data_ready = 1'b1;
 assign bled = 6'b111111;
@@ -104,7 +103,17 @@ function [15:0] sec_to_bcd;
     end
 endfunction
 
-assign decremented_bcd = sec_to_bcd(total_seconds - 14'd1);
+task set_disp_from_seconds;
+    input [13:0] secs_total;
+    reg [15:0] bcd;
+    begin
+        bcd = sec_to_bcd(secs_total);
+        disp_d3 <= bcd[15:12];
+        disp_d2 <= bcd[11:8];
+        disp_d1 <= bcd[7:4];
+        disp_d0 <= bcd[3:0];
+    end
+endtask
 
 always @(*) begin
     start_minutes = (set_d3 * 4'd10) + set_d2;
@@ -167,7 +176,7 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
         end
 
         // Start countdown on BUTTON0 falling edge (active-low button).
-        if (!running && btn0_prev && !btn0_sync1 && (start_total != 14'd0)) begin
+        if (!running && btn0_prev && !btn0_sync1 && (start_total != 14'd0) && (start_seconds <= 7'd59)) begin
             running <= 1'b1;
             sec_counter <= 25'd0;
             total_seconds <= start_total;
@@ -176,15 +185,16 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
                 running <= 1'b0;
             end else if (sec_counter == ONE_SEC_TICKS) begin
                 sec_counter <= 25'd0;
-                if (total_seconds >= 14'd1) begin
+                if (total_seconds > 14'd1) begin
                     total_seconds <= total_seconds - 14'd1;
-                    disp_d3 <= decremented_bcd[15:12];
-                    disp_d2 <= decremented_bcd[11:8];
-                    disp_d1 <= decremented_bcd[7:4];
-                    disp_d0 <= decremented_bcd[3:0];
-                    if (total_seconds == 14'd1) begin
-                        running <= 1'b0;
-                    end
+                    set_disp_from_seconds(total_seconds - 14'd1);
+                end else begin
+                    total_seconds <= 14'd0;
+                    running <= 1'b0;
+                    disp_d3 <= 4'd0;
+                    disp_d2 <= 4'd0;
+                    disp_d1 <= 4'd0;
+                    disp_d0 <= 4'd0;
                 end
             end else begin
                 sec_counter <= sec_counter + 25'd1;
