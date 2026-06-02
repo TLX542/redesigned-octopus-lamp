@@ -1,8 +1,8 @@
--d /home/abozkurt/etc/gowin/serial_template/impl/gwsynthesis/serial_template.vg
+-d C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\impl\gwsynthesis\serial_template.vg
 -p GW1NR-9C-QFN88P-6
 -pn GW1NR-LV9QN88PC6/I5
--cst /home/abozkurt/etc/gowin/serial_template/src/cs303.cst
--cfg /home/abozkurt/etc/gowin/serial_template/impl/pnr/device.cfg
+-cst C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\cs303.cst
+-cfg C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\impl\pnr\device.cfg
 -bit
 -tr
 -ph

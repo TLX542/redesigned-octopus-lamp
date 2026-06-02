@@ -1,18 +1,18 @@
 GowinSynthesis start
 Running parser ...
-Analyzing Verilog file '/home/abozkurt/etc/gowin/serial_template/src/serial_template.v'
-Analyzing Verilog file '/home/abozkurt/etc/gowin/serial_template/src/uart_rx.v'
-Compiling module 'serial_template'("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":1)
-Extracting RAM for identifier 'hex2seven'("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":16)
-Compiling module 'uart_rx'("/home/abozkurt/etc/gowin/serial_template/src/uart_rx.v":1)
-WARN  (EX3779) : 'hex2seven' should be on the sensitivity list. Signal missing is added and assuming complete sensitivity list specified. RTL design and post-synthesis netlist simulations may differ as a result("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":88)
-WARN  (EX3779) : 'hex2seven' should be on the sensitivity list. Signal missing is added and assuming complete sensitivity list specified. RTL design and post-synthesis netlist simulations may differ as a result("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":89)
-WARN  (EX3779) : 'hex2seven' should be on the sensitivity list. Signal missing is added and assuming complete sensitivity list specified. RTL design and post-synthesis netlist simulations may differ as a result("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":90)
-WARN  (EX3779) : 'hex2seven' should be on the sensitivity list. Signal missing is added and assuming complete sensitivity list specified. RTL design and post-synthesis netlist simulations may differ as a result("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":91)
+Analyzing Verilog file 'C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\serial_template.v'
+Analyzing Verilog file 'C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\lab_timer.v'
+Analyzing Verilog file 'C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\uart_rx.v'
+Compiling module 'serial_template'("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\serial_template.v":1)
+Compiling module 'lab_timer'("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\lab_timer.v":1)
+Compiling module 'uart_rx'("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\uart_rx.v":1)
+WARN  (EX3791) : Expression size 14 truncated to fit in target size 7("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\lab_timer.v":97)
+WARN  (EX3791) : Expression size 7 truncated to fit in target size 4("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\lab_timer.v":99)
+WARN  (EX3791) : Expression size 6 truncated to fit in target size 4("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\lab_timer.v":101)
 NOTE  (EX0101) : Current top module is "serial_template"
 [5%] Running netlist conversion ...
-WARN  (CV0016) : Input sw is unused("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":5)
-WARN  (CV0016) : Input btn is unused("/home/abozkurt/etc/gowin/serial_template/src/serial_template.v":6)
+WARN  (CV0016) : Input sw is unused("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\serial_template.v":5)
+WARN  (CV0020) : Input btn[3:1] is unused("C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\src\serial_template.v":6)
 Running device independent optimization ...
 [10%] Optimizing Phase 0 completed
 [15%] Optimizing Phase 1 completed
@@ -28,6 +28,6 @@ Running technical mapping ...
 [75%] Tech-Mapping Phase 2 completed
 [80%] Tech-Mapping Phase 3 completed
 [90%] Tech-Mapping Phase 4 completed
-[95%] Generate netlist file "/home/abozkurt/etc/gowin/serial_template/impl/gwsynthesis/serial_template.vg" completed
-[100%] Generate report file "/home/abozkurt/etc/gowin/serial_template/impl/gwsynthesis/serial_template_syn.rpt.html" completed
+[95%] Generate netlist file "C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\impl\gwsynthesis\serial_template.vg" completed
+[100%] Generate report file "C:\Users\ASUS\Desktop\temp\redesigned-octopus-lamp\serial_template\impl\gwsynthesis\serial_template_syn.rpt.html" completed
 GowinSynthesis finish
