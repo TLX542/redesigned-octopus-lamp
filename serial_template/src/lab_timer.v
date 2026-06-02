@@ -10,8 +10,8 @@ module lab_timer (
     input uart_rx
 );
 
-parameter CLK_FRE  = 27;     // MHz
-parameter UART_FRE = 115200; // bps
+parameter CLK_FRE  = 27;
+parameter UART_FRE = 115200;
 localparam [24:0] ONE_SEC_TICKS = (CLK_FRE * 1000000) - 1;
 
 wire [7:0] rx_data;
@@ -21,7 +21,6 @@ wire       rx_data_ready;
 assign rx_data_ready = 1'b1;
 assign bled = 6'b111111;
 
-// Unused in this design, kept for pin compatibility.
 wire _unused_sw = &sw;
 
 uart_rx #(
@@ -36,22 +35,18 @@ uart_rx #(
     .rx_pin(uart_rx)
 );
 
-// Display scan
 reg [15:0] disp_counter;
 reg [1:0] seg_counter;
 
-// User-entered MM:SS (BCD digits)
 reg [3:0] set_d3;
 reg [3:0] set_d2;
 reg [3:0] set_d1;
 reg [3:0] set_d0;
 
-// Countdown state
 reg        running;
 reg [24:0] sec_counter;
-reg [13:0] total_seconds; // 0..5999 for 99:59
+reg [13:0] total_seconds;
 
-// Button synchronizer and edge detector (BUTTON0)
 reg btn0_sync0;
 reg btn0_sync1;
 reg btn0_prev;
@@ -153,7 +148,6 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
         sec_counter <= 25'd0;
         total_seconds <= 14'd0;
     end else begin
-        // Synchronize button to local clock domain.
         btn0_sync0 <= btn[0];
         btn0_sync1 <= btn0_sync0;
         btn0_prev <= btn0_sync1;
@@ -161,7 +155,6 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
         if (rx_data_valid) begin
             led <= rx_data;
 
-            // Accept numeric ASCII only when timer is not running.
             if (!running && (rx_data >= 8'd48) && (rx_data <= 8'd57)) begin
                 set_d3 <= set_d2;
                 set_d2 <= set_d1;
@@ -175,7 +168,6 @@ always @(posedge sys_clk or negedge sys_rst_n) begin
             end
         end
 
-        // Start countdown on BUTTON0 falling edge (active-low button).
         if (!running && btn0_prev && !btn0_sync1 && (start_total != 14'd0) && (start_seconds <= 7'd59)) begin
             running <= 1'b1;
             sec_counter <= 25'd0;
@@ -214,7 +206,7 @@ always @(*) begin
             segment = 4'b0010;
         end
         2'b10: begin
-            seven = {1'b1, hex2seven(disp_d2)}; // keep center dot on
+            seven = {1'b1, hex2seven(disp_d2)};
             segment = 4'b0100;
         end
         default: begin
