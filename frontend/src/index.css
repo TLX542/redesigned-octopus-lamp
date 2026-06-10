@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #f3f5f4;
+  --bg-radial-a: rgba(255, 252, 244, 0.95);
+  --bg-radial-b: rgba(239, 246, 244, 0.92);
+  --bg-radial-c: rgba(227, 235, 234, 0.94);
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-border: rgba(148, 163, 184, 0.32);
+  --focus-ring: rgba(15, 23, 42, 0.22);
+  color: #1e293b;
+  background: radial-gradient(circle at top, var(--bg-radial-a), var(--bg-radial-b) 48%, var(--bg-radial-c) 100%);
+  font-family:
+    "Iowan Old Style",
+    "Palatino Linotype",
+    "Book Antiqua",
+    Palatino,
+    "Times New Roman",
+    serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% -8%, rgba(253, 245, 230, 0.45), transparent 32%),
+    radial-gradient(circle at 100% 0%, rgba(217, 236, 233, 0.5), transparent 38%),
+    linear-gradient(180deg, #f8faf9 0%, var(--bg-base) 100%);
+  background-attachment: fixed;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(30, 41, 59, 0.16);
+}
+
+.surface-panel {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(7px);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sans-ui {
+  font-family:
+    "Avenir Next",
+    Avenir,
+    "Segoe UI",
+    sans-serif;
+}
+
+.animate-rise {
+  animation: rise-in 0.7s ease-out both;
+}
+
+.animate-rise-soft {
+  animation: rise-in 0.9s ease-out both;
+}
+
+.stagger-1 {
+  animation-delay: 0.08s;
+}
+
+.stagger-2 {
+  animation-delay: 0.16s;
+}
+
+.stagger-3 {
+  animation-delay: 0.24s;
+}
+
+.stagger-4 {
+  animation-delay: 0.32s;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-rise,
+  .animate-rise-soft,
+  .stagger-1,
+  .stagger-2,
+  .stagger-3,
+  .stagger-4 {
+    animation: none;
+  }
+}
