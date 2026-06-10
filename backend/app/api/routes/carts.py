@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, selectinload
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.deps import get_current_user
-from app.db.models import Cart, CartItem, Order, OrderItem, Product
+from app.db.models import Cart, CartItem, DeliveryListEntry, Order, OrderItem, Product
 from app.db.session import get_db
 from app.schemas.cart import CartAddItem, CartItemRead, CartRead, CheckoutInvoiceItem, CheckoutInvoiceRead
 from app.schemas.user import UserRead
@@ -174,6 +174,8 @@ def checkout_cart(
                 unit_price=item.unit_price,
             )
         )
+
+    db.add(DeliveryListEntry(order_id=order.id, user_id=current_user.id))
 
     for item in list(cart.items):
         db.delete(item)

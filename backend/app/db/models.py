@@ -183,6 +183,11 @@ class Order(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     items: Mapped[list["OrderItem"]] = relationship(back_populates="order", cascade="all, delete-orphan")
+    delivery_entry: Mapped["DeliveryListEntry | None"] = relationship(
+        back_populates="order",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
 
 
 class OrderItem(Base):
@@ -196,3 +201,14 @@ class OrderItem(Base):
     unit_price: Mapped[Decimal] = mapped_column(DECIMAL(10, 2))
 
     order: Mapped["Order"] = relationship(back_populates="items")
+
+
+class DeliveryListEntry(Base):
+    __tablename__ = "delivery_list_entries"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"), unique=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    order: Mapped["Order"] = relationship(back_populates="delivery_entry")
